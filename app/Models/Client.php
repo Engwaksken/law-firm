@@ -56,6 +56,13 @@ class Client extends Model
     public function conflictChecks(): HasMany { return $this->hasMany(ConflictCheck::class); }
     public function consultations(): HasMany { return $this->hasMany(Consultation::class); }
     public function documents(): HasMany { return $this->hasMany(Document::class); }
+    public function invoices(): HasMany { return $this->hasMany(Invoice::class); }
+    public function messages(): HasMany { return $this->hasMany(ClientMessage::class); }
+
+    public function portalUsers(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'client_portal_users')->withPivot(['invited_by', 'invited_at', 'revoked_at']);
+    }
 
     /** Masked for display: only the last 4 characters of an ID number are shown. */
     public function maskedIdNumber(): ?string

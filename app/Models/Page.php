@@ -31,7 +31,7 @@ class Page extends Model
         'admin', 'about', 'privacy', 'contact', 'book-a-consultation', 'practice-areas', 'advocates',
         'insights', 'careers', 'events', 'newsletter', 'sitemap.xml', 'robots.txt', 'preview', 'storage',
         'build', 'livewire', 'up', 'filament', 'css', 'js', 'fonts', 'portal', 'api', 'login', 'logout',
-        'documents', 'calendar',
+        'documents', 'calendar', 'finance',
     ];
 
     protected $fillable = [

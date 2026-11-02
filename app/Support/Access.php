@@ -90,7 +90,8 @@ final class Access
             'documents.approve' => 'Approve documents',
         ],
         'Finance' => [
-            'invoices.issue' => 'Issue invoices',
+            'invoices.issue' => 'Approve and issue invoices, credit notes',
+            'expenses.approve' => 'Approve expenses',
             'payments.record' => 'Record payments',
             'reports.export' => 'Export reports',
         ],
@@ -121,7 +122,7 @@ final class Access
             self::LEGAL_ASSOCIATE => ['clients.view', 'matters.view-assigned', 'conflicts.run', 'case-notes.edit', 'documents.upload'],
             self::LEGAL_ASSISTANT => ['clients.view', 'matters.view-assigned', 'documents.upload'],
             self::PARALEGAL => ['clients.view', 'matters.view-assigned', 'documents.upload'],
-            self::FINANCE_OFFICER => ['clients.view', 'invoices.issue', 'payments.record', 'reports.export'],
+            self::FINANCE_OFFICER => ['clients.view', 'invoices.issue', 'expenses.approve', 'payments.record', 'reports.export'],
             self::RECEPTIONIST => ['consultations.view', 'consultations.manage', 'inquiries.manage', 'clients.view', 'conflicts.run'],
             self::CONTENT_EDITOR => ['content.view', 'content.manage', 'content.publish', 'inquiries.manage'],
             self::CLIENT => ['portal.access'],

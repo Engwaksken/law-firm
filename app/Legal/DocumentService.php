@@ -69,6 +69,39 @@ class DocumentService
         });
     }
 
+    /**
+     * A client uploads a document the firm requested, through the portal.
+     * Authorised by PortalAccess (clients have no staff permissions); same
+     * type checks, scanning and private storage as staff uploads.
+     */
+    public function storeForClient(UploadedFile|string $file, \App\Models\DocumentRequest $request, User $client): Document
+    {
+        abort_unless(
+            $request->status === 'open' && \App\Support\PortalAccess::documentRequests($client)->whereKey($request->id)->exists(),
+            404,
+        );
+
+        return DB::transaction(function () use ($file, $request, $client) {
+            $document = new Document([
+                'matter_id' => $request->matter_id,
+                'client_id' => $request->matter?->client_id,
+                'category' => 'other',
+                'folder' => 'Client uploads',
+                'title' => $request->title,
+            ]);
+            $document->forceFill(['uploaded_by' => $client->id, 'status' => 'draft', 'uploaded_by_client' => true])->save();
+
+            $version = $this->addVersionUnchecked($document, $file, 'Uploaded by the client via the portal', $client);
+
+            // Infected files never satisfy the request.
+            if ($version->scan_status !== 'infected') {
+                $request->forceFill(['status' => 'submitted', 'submitted_at' => now(), 'document_id' => $document->id])->save();
+            }
+
+            return $document->refresh();
+        });
+    }
+
     public function addVersion(Document $document, UploadedFile|string $file, ?string $notes, User $user): DocumentVersion
     {
         Gate::forUser($user)->authorize('uploadVersion', $document);

@@ -50,6 +50,14 @@ Route::get('/documents/{version}/download', \App\Http\Controllers\DocumentDownlo
 Route::get('/calendar/export.ics', \App\Http\Controllers\CalendarExportController::class)
     ->middleware('auth')->name('calendar.export');
 
+// Finance PDFs (staff; policy-checked in the controller).
+Route::middleware('auth')->prefix('finance')->name('finance.')->controller(\App\Http\Controllers\FinancePdfController::class)->group(function () {
+    Route::get('/invoices/{invoice}/pdf', 'invoice')->name('invoice.pdf');
+    Route::get('/receipts/{receipt}/pdf', 'receipt')->name('receipt.pdf');
+    Route::get('/credit-notes/{creditNote}/pdf', 'creditNote')->name('credit-note.pdf');
+    Route::get('/clients/{client}/statement', 'statement')->name('statement.pdf');
+});
+
 // Draft preview: staff only (signed in + allowed to view content). Never cached or indexed.
 Route::get('/preview/pages/{page}', [CmsPageController::class, 'preview'])
     ->middleware(['auth'])->name('pages.preview');

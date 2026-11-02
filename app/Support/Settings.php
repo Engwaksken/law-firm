@@ -74,6 +74,15 @@ class Settings
         'seo_google_verification' => ['default' => null, 'type' => 'string'],
         'seo_bing_verification' => ['default' => null, 'type' => 'string'],
         'seo_organization_schema' => ['default' => true, 'type' => 'boolean'],
+
+        // Billing (System → Billing settings)
+        'vat_registered' => ['default' => false, 'type' => 'boolean'],
+        'vat_rate' => ['default' => '18.00', 'type' => 'string'],          // Uganda standard rate; firm to confirm
+        'firm_tin' => ['default' => null, 'type' => 'string'],
+        'invoice_payment_terms_days' => ['default' => 30, 'type' => 'integer'],
+        'invoice_footer' => ['default' => null, 'type' => 'string'],
+        'payment_instructions' => ['default' => null, 'type' => 'string'],  // bank / mobile money details
+        'supported_currencies' => ['default' => ['UGX', 'USD'], 'type' => 'json'],
     ];
 
     public static function get(string $key, mixed $default = null): mixed

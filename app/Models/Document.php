@@ -43,7 +43,8 @@ class Document extends Model implements HasRecordLevelAccess
 
     protected function casts(): array
     {
-        return ['is_evidence' => 'boolean', 'is_template' => 'boolean', 'approved_at' => 'datetime', 'description' => 'encrypted'];
+        return ['is_evidence' => 'boolean', 'is_template' => 'boolean', 'approved_at' => 'datetime', 'description' => 'encrypted',
+            'shared_with_client_at' => 'datetime', 'uploaded_by_client' => 'boolean'];
     }
 
     protected static function booted(): void
