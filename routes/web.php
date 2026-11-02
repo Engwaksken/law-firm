@@ -49,6 +49,8 @@ Route::get('/documents/{version}/download', \App\Http\Controllers\DocumentDownlo
 // Personal calendar feed (entries the signed-in user can see; no client names).
 Route::get('/calendar/export.ics', \App\Http\Controllers\CalendarExportController::class)
     ->middleware('auth')->name('calendar.export');
+Route::get('/calendar/feed/{token}.ics', \App\Http\Controllers\CalendarFeedController::class)
+    ->middleware('throttle:30,1')->where('token', '[a-f0-9]{64}')->name('calendar.feed');
 
 // Finance PDFs (staff; policy-checked in the controller).
 Route::middleware('auth')->prefix('finance')->name('finance.')->controller(\App\Http\Controllers\FinancePdfController::class)->group(function () {

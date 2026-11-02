@@ -102,12 +102,20 @@ Spec: `OPENCODE PROJECT MANAGER Advocates.txt` (kept outside the repo).
 - Matter workflow transitions are defined in code (`MatterLifecycle::TRANSITIONS`); an admin UI to configure them is not built.
 - Production needs `php artisan schedule:run` every minute and a queue worker; set `FIRM_SCANNER=clamav` with clamd.
 
-## Phase 5: Finance and client portal (next)
+## Phase 5: Finance and client portal ✅
 Time entries, fee agreements, invoices, payments, receipts, financial reports, client dashboard, secure messages.
+
+- [x] Billing workflows, PDF invoices/receipts/statements/credit notes, and client portal access with record-level filtering
+- [x] Portal document uploads/requests, issued invoices and receipts, matter updates and financial visibility rules
+- [x] Billing feature tests (plus access checks); full suite should be rerun with sufficient PHP memory
 
 ## Phase 3: CMS (original scope)
 ## Phase 4: Legal practice
 ## Phase 5: Finance and client portal
-## Phase 6: Integrations
+## Phase 6: Integrations (in progress)
+
+- [x] Personal calendar subscriptions: random per-user token, stored hashed, rotate/revoke controls, throttled ICS route;
+      event summaries omit client names, matter titles and notes. Verified by calendar feature tests.
+- [ ] Remaining integrations require scope from the project spec (not present in this repository).
 ## Phase 7: Quality assurance
 ## Phase 8: Deployment

@@ -32,7 +32,7 @@ class User extends Authenticatable implements FilamentUser, HasAppAuthentication
     ];
 
     /** Never write these values into the audit trail. */
-    protected array $auditExclude = ['password', 'remember_token', 'app_authentication_secret', 'app_authentication_recovery_codes', 'last_login_at', 'last_login_ip'];
+    protected array $auditExclude = ['password', 'remember_token', 'app_authentication_secret', 'app_authentication_recovery_codes', 'calendar_feed_token_hash', 'last_login_at', 'last_login_ip'];
 
     protected function casts(): array
     {

@@ -47,6 +47,8 @@ class LegalCalendar extends Page
     #[Url]
     public ?int $matterId = null;
 
+    public ?string $newFeedUrl = null;
+
     #[Url]
     public string $type = '';           // '' | hearing | deadline | appointment
 
@@ -72,6 +74,25 @@ class LegalCalendar extends Page
     public function previousMonth(): void { $this->month = $this->start()->subMonth()->format('Y-m'); }
     public function nextMonth(): void { $this->month = $this->start()->addMonth()->format('Y-m'); }
     public function today(): void { $this->month = now()->format('Y-m'); }
+
+    public function rotateFeedToken(): void
+    {
+        $user = auth()->user();
+        abort_unless($user && static::canAccess(), 403);
+
+        $token = bin2hex(random_bytes(32));
+        $user->forceFill(['calendar_feed_token_hash' => hash('sha256', $token)])->save();
+        $this->newFeedUrl = route('calendar.feed', ['token' => $token]);
+    }
+
+    public function revokeFeedToken(): void
+    {
+        $user = auth()->user();
+        abort_unless($user && static::canAccess(), 403);
+
+        $user->forceFill(['calendar_feed_token_hash' => null])->save();
+        $this->newFeedUrl = null;
+    }
 
     public function start(): Carbon
     {

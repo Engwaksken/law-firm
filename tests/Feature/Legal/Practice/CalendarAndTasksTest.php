@@ -182,6 +182,19 @@ class CalendarAndTasksTest extends PracticeTestCase
         $this->get(route('calendar.export'))->assertRedirect();
     }
 
+    public function test_private_calendar_feed_works_without_session_and_can_be_revoked(): void
+    {
+        $token = bin2hex(random_bytes(32));
+        $this->lead->forceFill(['calendar_feed_token_hash' => hash('sha256', $token)])->save();
+
+        $this->get(route('calendar.feed', ['token' => $token]))
+            ->assertOk()
+            ->assertHeader('Content-Type', 'text/calendar; charset=utf-8');
+
+        $this->lead->forceFill(['calendar_feed_token_hash' => null])->save();
+        $this->get(route('calendar.feed', ['token' => $token]))->assertNotFound();
+    }
+
     public function test_calendar_page_shows_only_visible_entries(): void
     {
         Hearing::factory()->create(['matter_id' => $this->matter->id, 'starts_at' => now()->setTime(10, 0)]);

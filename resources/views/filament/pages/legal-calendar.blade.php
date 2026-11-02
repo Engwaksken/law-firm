@@ -66,6 +66,22 @@
         </div>
     </div>
 
+    <x-filament::section heading="Calendar subscription">
+        <p class="mb-3 text-sm text-gray-600 dark:text-gray-300">Subscribe in a calendar app using a private link. The link grants access to your visible calendar until revoked. Event titles include only the event type and matter reference.</p>
+        @if ($newFeedUrl)
+            <div class="mb-3 rounded-lg bg-gray-50 p-3 dark:bg-white/5" role="status">
+                <p class="mb-2 text-sm font-medium">Copy this private URL now. It will not be shown again.</p>
+                <code class="block break-all text-xs">{{ $newFeedUrl }}</code>
+            </div>
+        @endif
+        <div class="flex flex-wrap gap-2">
+            <x-filament::button wire:click="rotateFeedToken" color="primary">{{ auth()->user()->calendar_feed_token_hash ? 'Rotate subscription link' : 'Create subscription link' }}</x-filament::button>
+            @if (auth()->user()->calendar_feed_token_hash)
+                <x-filament::button wire:click="revokeFeedToken" color="danger" wire:confirm="Revoke this calendar subscription link?">Revoke link</x-filament::button>
+            @endif
+        </div>
+    </x-filament::section>
+
     {{-- Month grid (hidden on small screens, where the agenda below is easier to read). --}}
     <div class="hidden overflow-hidden rounded-xl border border-gray-200 bg-white md:block dark:border-white/10 dark:bg-gray-900">
         <table class="w-full table-fixed text-sm">
