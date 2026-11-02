@@ -16,7 +16,7 @@ trait HasReference
             if (blank($model->reference)) {
                 do {
                     $reference = static::REFERENCE_PREFIX.'-'.now()->format('ym').'-'.Str::upper(Str::random(6));
-                } while (static::withTrashed()->where('reference', $reference)->exists());
+                } while ((method_exists(static::class, 'bootSoftDeletes') ? static::withTrashed() : static::query())->where('reference', $reference)->exists());
                 $model->reference = $reference;
             }
         });

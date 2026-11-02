@@ -77,6 +77,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->widgets([
                 AccountWidget::class,
+                \App\Filament\Widgets\MyPracticeOverview::class,
                 FirmOverviewStats::class,
                 RecentActivity::class,
             ])

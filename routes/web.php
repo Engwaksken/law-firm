@@ -42,6 +42,14 @@ Route::get('/newsletter/unsubscribe/{subscriber}', [NewsletterController::class,
 Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
 Route::get('/robots.txt', RobotsController::class)->name('robots');
 
+// Confidential document downloads: signed + expiring link AND an authorised session (re-checked on use).
+Route::get('/documents/{version}/download', \App\Http\Controllers\DocumentDownloadController::class)
+    ->middleware(['auth', 'signed'])->name('documents.download');
+
+// Personal calendar feed (entries the signed-in user can see; no client names).
+Route::get('/calendar/export.ics', \App\Http\Controllers\CalendarExportController::class)
+    ->middleware('auth')->name('calendar.export');
+
 // Draft preview: staff only (signed in + allowed to view content). Never cached or indexed.
 Route::get('/preview/pages/{page}', [CmsPageController::class, 'preview'])
     ->middleware(['auth'])->name('pages.preview');

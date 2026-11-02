@@ -72,8 +72,38 @@ Spec: `OPENCODE PROJECT MANAGER Advocates.txt` (kept outside the repo).
 - Malware scanning of uploads (CVs and media library) is still outstanding.
 - No browser-based visual or accessibility audit yet (Phase 7).
 
-## Phase 4: Legal practice (next)
-Client management, conflict checking, engagements, matters and cases, hearings, tasks, legal documents.
+## Phase 4: Legal practice ✅ (2026-11-05)
+
+- [x] **Matter access:** visible only to the matter team, or to `matters.view-all` users for unrestricted matters.
+      Restricted matters (ethical walls) are visible to assigned users only, **including over the System Owner**
+      (`HasRecordLevelAccess` opts these models out of the Gate::before bypass). One rule (`App\Support\MatterAccess`)
+      drives policies and every list/search query.
+- [x] Clients: individual/corporate, contacts and authorised representatives, encrypted and masked ID numbers, encrypted notes
+- [x] Conflict checks: normalised name search over clients, contacts and matter parties (exact, similar spelling, reversed
+      order); restricted matters searched but redacted; reviewer ≠ requester; reasoned decision required; immutable
+- [x] Matter lifecycle Intake → Conflict review → Engagement approval → Active ⇄ Pending/Stayed → Closed → Archived with
+      enforced rules (cleared conflict before engagement, approved engagement before active, no archiving with open work),
+      reasons, and append-only status history
+- [x] Engagements: fee arrangements in UGX/multi-currency; submitted then approved by a different person with
+      `engagements.approve`; approved terms locked
+- [x] Case notes: encrypted, privileged by default, author-only editing, excluded from audit values
+- [x] Documents: private disk only, versioning with SHA-256, malware scanning (ClamAV driver or "not scanned" warning;
+      infected files quarantined), signed expiring links re-authorised on use, chain-of-custody access log, approval
+      workflow, evidence undeletable
+- [x] Tasks with comments and attachments, assignment notifications, hourly overdue escalation, productivity report with CSV
+- [x] Hearings, deadlines (never auto-calculated), appointments; legal calendar page; ICS export (type + matter reference only);
+      daily reminders at 14/7/3/1/0 days, sent once
+- [x] My-practice dashboard widget; courts reference list
+- [x] 242 tests passing (79 new), including access-isolation tests for every record type
+
+### Open items carried forward
+- PDF generation (invoices/documents) needs a PDF library. Decide in Phase 5 (e.g. dompdf).
+- Calendar subscription from external apps needs a personal feed token (the .ics export currently requires a session).
+- Matter workflow transitions are defined in code (`MatterLifecycle::TRANSITIONS`); an admin UI to configure them is not built.
+- Production needs `php artisan schedule:run` every minute and a queue worker; set `FIRM_SCANNER=clamav` with clamd.
+
+## Phase 5: Finance and client portal (next)
+Time entries, fee agreements, invoices, payments, receipts, financial reports, client dashboard, secure messages.
 
 ## Phase 3: CMS (original scope)
 ## Phase 4: Legal practice
