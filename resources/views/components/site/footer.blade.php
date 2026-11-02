@@ -39,12 +39,18 @@
         <nav aria-label="Firm">
             <h2 class="mb-4 font-display text-sm font-semibold tracking-wider text-brand-accent uppercase">The firm</h2>
             <ul class="space-y-2 text-sm">
+                @if ($footerLinks = \App\Support\SiteNavigation::footer())
+                    @foreach ($footerLinks as $link)
+                        <li><a href="{{ $link['url'] }}" class="hover:text-white" @if ($link['external']) target="_blank" rel="noopener noreferrer" @endif>{{ $link['label'] }}@if ($link['external'])<span class="sr-only"> (opens in a new tab)</span>@endif</a></li>
+                    @endforeach
+                @else
                 <li><a href="{{ route('about') }}" class="hover:text-white">About us</a></li>
                 <li><a href="{{ route('advocates.index') }}" class="hover:text-white">Our advocates</a></li>
                 <li><a href="{{ route('insights.index') }}" class="hover:text-white">Legal insights</a></li>
                 <li><a href="{{ route('careers.index') }}" class="hover:text-white">Careers</a></li>
                 <li><a href="{{ route('consultation') }}" class="hover:text-white">Book a consultation</a></li>
                 <li><a href="{{ route('privacy') }}" class="hover:text-white">Privacy notice</a></li>
+                @endif
             </ul>
         </nav>
 

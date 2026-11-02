@@ -4,6 +4,9 @@
     $items = SiteNavigation::header();
     $logo = Settings::get('logo_path');
     $firm = Settings::get('firm_name');
+    // Fixed attribute strings only (no user input), so safe to print unescaped.
+    $ext = fn (array $link) => ! empty($link['external']) ? 'target="_blank" rel="noopener noreferrer"' : '';
+    $newTab = fn (array $link) => ! empty($link['external']) ? '<span class="sr-only"> (opens in a new tab)</span>' : '';
 @endphp
 <header x-data="{ open: false, mega: null }" @keydown.escape.window="open = false; mega = null"
         class="sticky top-0 z-50 border-b border-black/5 bg-white/95 backdrop-blur">
@@ -23,7 +26,7 @@
         <nav aria-label="Main" class="hidden lg:block">
             <ul class="flex items-center gap-1">
                 @foreach ($items as $index => $item)
-                    @php $isActive = $item['active'] && request()->routeIs($item['active']); @endphp
+                    @php $isActive = ($item['active'] && request()->routeIs($item['active'])) || ($item['url'] && $item['url'] === url()->current()); @endphp
                     @if (! empty($item['children']))
                         <li class="relative" @mouseenter="mega = {{ $index }}" @mouseleave="mega = null">
                             <button type="button" @click="mega = mega === {{ $index }} ? null : {{ $index }}"
@@ -40,10 +43,12 @@
                                             <p class="font-display text-xl font-semibold text-brand">{{ $item['label'] }}</p>
                                             <a href="{{ $item['url'] }}" class="text-sm font-semibold text-brand-secondary hover:underline">View all practice areas →</a>
                                         </div>
+                                    @elseif ($item['url'])
+                                        <a href="{{ $item['url'] }}" {!! $ext($item) !!} class="block rounded p-3 text-sm font-semibold text-brand-secondary hover:bg-canvas">{{ $item['label'] }} overview{!! $newTab($item) !!}</a>
                                     @endif
                                     @foreach ($item['children'] as $child)
-                                        <a href="{{ $child['url'] }}" class="block rounded p-3 hover:bg-canvas">
-                                            <span class="block text-sm font-semibold text-brand">{{ $child['label'] }}</span>
+                                        <a href="{{ $child['url'] }}" {!! $ext($child) !!} class="block rounded p-3 hover:bg-canvas">
+                                            <span class="block text-sm font-semibold text-brand">{{ $child['label'] }}{!! $newTab($child) !!}</span>
                                             @if (! empty($child['description']))
                                                 <span class="mt-0.5 line-clamp-2 block text-xs text-ink/60">{{ $child['description'] }}</span>
                                             @endif
@@ -54,9 +59,9 @@
                         </li>
                     @else
                         <li>
-                            <a href="{{ $item['url'] }}" @if ($isActive) aria-current="page" @endif
+                            <a href="{{ $item['url'] }}" {!! $ext($item) !!} @if ($isActive) aria-current="page" @endif
                                class="rounded px-3 py-2 text-sm font-medium {{ $isActive ? 'text-brand-secondary' : 'text-ink/80 hover:text-brand' }}">
-                                {{ $item['label'] }}
+                                {{ $item['label'] }}{!! $newTab($item) !!}
                             </a>
                         </li>
                     @endif
@@ -87,13 +92,15 @@
                             <svg aria-hidden="true" class="h-5 w-5 transition" :class="sub && 'rotate-180'" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.17l3.71-3.94a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
                         </button>
                         <ul x-show="sub" x-cloak class="mb-2 ml-3 border-l border-black/10 pl-3">
-                            <li><a href="{{ $item['url'] }}" class="block px-3 py-2 text-sm font-semibold text-brand-secondary">All {{ strtolower($item['label']) }}</a></li>
+                            @if ($item['url'])
+                                <li><a href="{{ $item['url'] }}" {!! $ext($item) !!} class="block px-3 py-2 text-sm font-semibold text-brand-secondary">All {{ strtolower($item['label']) }}{!! $newTab($item) !!}</a></li>
+                            @endif
                             @foreach ($item['children'] as $child)
-                                <li><a href="{{ $child['url'] }}" class="block px-3 py-2 text-sm text-ink/80">{{ $child['label'] }}</a></li>
+                                <li><a href="{{ $child['url'] }}" {!! $ext($child) !!} class="block px-3 py-2 text-sm text-ink/80">{{ $child['label'] }}{!! $newTab($child) !!}</a></li>
                             @endforeach
                         </ul>
                     @else
-                        <a href="{{ $item['url'] }}" class="block rounded px-3 py-3 font-medium text-brand">{{ $item['label'] }}</a>
+                        <a href="{{ $item['url'] }}" {!! $ext($item) !!} class="block rounded px-3 py-3 font-medium text-brand">{{ $item['label'] }}{!! $newTab($item) !!}</a>
                     @endif
                 </li>
             @endforeach

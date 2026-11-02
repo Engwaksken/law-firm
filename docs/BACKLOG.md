@@ -49,11 +49,33 @@ Spec: `OPENCODE PROJECT MANAGER Advocates.txt` (kept outside the repo).
 - Dark theme for the public site isn't built yet (spec says "where useful").
 - No browser-based visual or accessibility audit yet (Phase 7). Markup follows WCAG patterns, but it hasn't been checked with tools.
 
-## Phase 3: CMS (next)
-Dynamic pages and page builder (page_blocks), menu builder (header/footer menus already read by the site),
-media library, publishing workflow, SEO settings.
+## Phase 3: CMS ✅ (2026-11-04)
 
-## Phase 3: CMS (details)
+- [x] Dynamic pages at `/{slug}` built from 15 block types (hero, text, text+image, image, cards, stats, FAQs,
+      quote, call to action, live practice areas/advocates/insights/events/testimonials, embedded forms)
+- [x] Reserved URLs: CMS pages can never shadow built-in pages; slugs validated
+- [x] Workflow: draft → in review → published/scheduled → archived, with review notifications and audit entries.
+      The public site serves the **last published revision**, so edits by non-publishers never go live unreviewed.
+      Live page URLs can only be changed by publishers.
+- [x] Revision history with restore (restores the working copy only)
+- [x] Staff-only draft preview (signed in + content access, noindex, no-store)
+- [x] A CMS page can replace the homepage (its own URL redirects 301 to `/`)
+- [x] Media library (alt text required for images; permanent delete blocked while in use) + MediaPicker
+- [x] Menu builder for header and footer (2 levels; CMS page / built-in page / URL links; unsafe or unavailable links skipped)
+- [x] Events module (admin + public listing/detail, cancelled notices, schema.org Event)
+- [x] SEO: defaults, verification codes, schema.org LegalService on the homepage, robots.txt route,
+      "discourage indexing" switch for staging, pages and events in the sitemap
+- [x] Fixed: boolean settings saved as `false` reverted to their default
+- [x] 163 tests passing (56 new)
+
+### Open items carried forward
+- Malware scanning of uploads (CVs and media library) is still outstanding.
+- No browser-based visual or accessibility audit yet (Phase 7).
+
+## Phase 4: Legal practice (next)
+Client management, conflict checking, engagements, matters and cases, hearings, tasks, legal documents.
+
+## Phase 3: CMS (original scope)
 ## Phase 4: Legal practice
 ## Phase 5: Finance and client portal
 ## Phase 6: Integrations

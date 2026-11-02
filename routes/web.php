@@ -2,10 +2,13 @@
 
 use App\Http\Controllers\Website\AdvocateController;
 use App\Http\Controllers\Website\CareerController;
+use App\Http\Controllers\Website\CmsPageController;
+use App\Http\Controllers\Website\EventController;
 use App\Http\Controllers\Website\InsightController;
 use App\Http\Controllers\Website\NewsletterController;
 use App\Http\Controllers\Website\PageController;
 use App\Http\Controllers\Website\PracticeAreaController;
+use App\Http\Controllers\Website\RobotsController;
 use App\Http\Controllers\Website\SitemapController;
 use Illuminate\Support\Facades\Route;
 
@@ -25,6 +28,9 @@ Route::get('/insights', [InsightController::class, 'index'])->name('insights.ind
 Route::get('/insights/category/{category:slug}', [InsightController::class, 'category'])->name('insights.category');
 Route::get('/insights/{article:slug}', [InsightController::class, 'show'])->name('insights.show');
 
+Route::get('/events', [EventController::class, 'index'])->name('events.index');
+Route::get('/events/{event:slug}', [EventController::class, 'show'])->name('events.show');
+
 Route::get('/careers', [CareerController::class, 'index'])->name('careers.index');
 Route::get('/careers/{career:slug}', [CareerController::class, 'show'])->name('careers.show');
 
@@ -34,3 +40,13 @@ Route::get('/newsletter/unsubscribe/{subscriber}', [NewsletterController::class,
     ->middleware('signed')->name('newsletter.unsubscribe');
 
 Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
+Route::get('/robots.txt', RobotsController::class)->name('robots');
+
+// Draft preview: staff only (signed in + allowed to view content). Never cached or indexed.
+Route::get('/preview/pages/{page}', [CmsPageController::class, 'preview'])
+    ->middleware(['auth'])->name('pages.preview');
+
+// CMS pages. Must stay LAST so built-in routes always win.
+Route::get('/{slug}', [CmsPageController::class, 'show'])
+    ->where('slug', '[a-z0-9]+(?:-[a-z0-9]+)*(?:/[a-z0-9]+(?:-[a-z0-9]+)*)*')
+    ->name('pages.show');

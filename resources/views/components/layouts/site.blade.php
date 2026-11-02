@@ -9,7 +9,10 @@
     use App\Support\Settings;
     $firm = Settings::get('firm_name');
     $pageTitle = $title ? "{$title} | {$firm}" : $firm.' | '.Settings::get('firm_tagline');
-    $metaDescription = str($description ?? Settings::get('home_hero_subtitle'))->stripTags()->squish()->limit(160);
+    $metaDescription = str($description ?: (Settings::get('seo_default_description') ?? Settings::get('home_hero_subtitle')))->stripTags()->squish()->limit(160);
+    $image ??= ($default = Settings::get('seo_default_image')) ? Storage::disk('public')->url($default) : null;
+    $noindex = $noindex || Settings::get('seo_discourage_indexing');
+    $isHome = request()->routeIs('home');
     $hex = fn (string $key) => preg_match('/^#[0-9A-Fa-f]{6}$/', (string) Settings::get($key)) ? Settings::get($key) : Settings::DEFINITIONS[$key]['default'];
     $fontHeading = Settings::get('font_heading');
     $fontBody = Settings::get('font_body');
@@ -25,7 +28,10 @@
     <title>{{ $pageTitle }}</title>
     <meta name="description" content="{{ $metaDescription }}">
     <link rel="canonical" href="{{ url()->current() }}">
-    @if ($noindex)<meta name="robots" content="noindex">@endif
+    @if ($noindex)<meta name="robots" content="noindex, nofollow">@endif
+    @if ($v = Settings::get('seo_google_verification'))<meta name="google-site-verification" content="{{ $v }}">@endif
+    @if ($v = Settings::get('seo_bing_verification'))<meta name="msvalidate.01" content="{{ $v }}">@endif
+    <meta name="twitter:card" content="{{ $image ? 'summary_large_image' : 'summary' }}">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="{{ $firm }}">
     <meta property="og:title" content="{{ $title ?? $firm }}">
@@ -50,6 +56,21 @@
     </style>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
+    @if ($isHome && Settings::get('seo_organization_schema'))
+        <script type="application/ld+json">{!! json_encode(array_filter([
+            '@context' => 'https://schema.org',
+            '@type' => 'LegalService',
+            'name' => $firm,
+            'url' => url('/'),
+            'logo' => ($logo = Settings::get('logo_path')) ? Storage::disk('public')->url($logo) : null,
+            'description' => $metaDescription->toString(),
+            'telephone' => Settings::get('contact_phone'),
+            'email' => Settings::get('contact_email'),
+            'address' => Settings::get('contact_address'),
+            'sameAs' => array_values(Settings::get('social_links') ?: []) ?: null,
+        ]), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}</script>
+    @endif
+    @stack('jsonld')
     {{ $head ?? '' }}
 </head>
 <body class="flex min-h-screen flex-col">

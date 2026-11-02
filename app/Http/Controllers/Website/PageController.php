@@ -6,14 +6,23 @@ use App\Http\Controllers\Controller;
 use App\Models\Advocate;
 use App\Models\Article;
 use App\Models\Office;
+use App\Models\Page;
+use App\Support\Settings;
+use Illuminate\Http\Response;
 use App\Models\PracticeArea;
 use App\Models\Testimonial;
 use Illuminate\View\View;
 
 class PageController extends Controller
 {
-    public function home(): View
+    public function home(): View|Response
     {
+        // A published CMS page can replace the built-in homepage (System → SEO & homepage).
+        if (($pageId = (int) Settings::get('homepage_page_id'))
+            && ($page = Page::query()->published()->find($pageId))) {
+            return CmsPageController::render($page, $page->liveContent(), isHome: true);
+        }
+
         $areas = PracticeArea::query()->visible()->get();
 
         return view('website.home', [

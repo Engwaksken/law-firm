@@ -65,6 +65,15 @@ class Settings
         'about_milestones' => ['default' => [], 'type' => 'json'],
         'about_governance' => ['default' => null, 'type' => 'string'],
         'privacy_notice' => ['default' => null, 'type' => 'string'],
+
+        // CMS & SEO (System → SEO settings)
+        'homepage_page_id' => ['default' => null, 'type' => 'integer'],   // a published CMS page replaces the default homepage
+        'seo_default_description' => ['default' => null, 'type' => 'string'],
+        'seo_default_image' => ['default' => null, 'type' => 'string'],   // public-disk path
+        'seo_discourage_indexing' => ['default' => false, 'type' => 'boolean'], // staging sites
+        'seo_google_verification' => ['default' => null, 'type' => 'string'],
+        'seo_bing_verification' => ['default' => null, 'type' => 'string'],
+        'seo_organization_schema' => ['default' => true, 'type' => 'boolean'],
     ];
 
     public static function get(string $key, mixed $default = null): mixed
@@ -101,7 +110,13 @@ class Settings
         foreach ($values as $key => $value) {
             $type = static::DEFINITIONS[$key]['type'] ?? (is_array($value) ? 'json' : 'string');
             SiteSetting::updateOrCreate(['key' => $key], [
-                'value' => $type === 'json' ? json_encode($value ?? []) : $value,
+                'value' => match ($type) {
+                    'json' => json_encode($value ?? []),
+                    // Explicit 1/0: an empty string would read back as "unset" and revert to the default.
+                    'boolean' => $value ? '1' : '0',
+                    'integer' => $value === null || $value === '' ? null : (string) (int) $value,
+                    default => $value,
+                },
                 'type' => $type,
             ]);
         }
