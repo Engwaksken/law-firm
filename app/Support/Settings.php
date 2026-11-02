@@ -41,6 +41,30 @@ class Settings
         'social_links' => ['default' => [], 'type' => 'json'],
         'default_currency' => ['default' => 'UGX', 'type' => 'string'],
         'timezone' => ['default' => 'Africa/Kampala', 'type' => 'string'],
+
+        // Website content (System → Website content). Sections with empty lists stay hidden,
+        // so the site never shows invented statistics, milestones or affiliations.
+        'home_hero_title' => ['default' => 'Clear legal counsel for decisions that matter', 'type' => 'string'],
+        'home_hero_subtitle' => ['default' => 'We advise individuals, families and businesses across a broad range of practice areas, with practical advice and committed representation.', 'type' => 'string'],
+        'home_hero_image' => ['default' => null, 'type' => 'string'],
+        'home_intro_title' => ['default' => 'About the firm', 'type' => 'string'],
+        'home_intro_body' => ['default' => 'Our advocates combine deep legal knowledge with a practical understanding of our clients’ goals. We explain options plainly, act promptly and keep you informed at every stage.', 'type' => 'string'],
+        'home_why_title' => ['default' => 'Why clients choose us', 'type' => 'string'],
+        'home_why_points' => ['default' => [
+            ['title' => 'Practical advice', 'text' => 'Clear explanations of your options, risks and likely costs.'],
+            ['title' => 'Responsive service', 'text' => 'Prompt communication and regular updates on your matter.'],
+            ['title' => 'Confidentiality', 'text' => 'Your information is handled securely and discreetly.'],
+            ['title' => 'Professional integrity', 'text' => 'We uphold the highest ethical and professional standards.'],
+        ], 'type' => 'json'],
+        'home_stats' => ['default' => [], 'type' => 'json'],
+        'about_history' => ['default' => null, 'type' => 'string'],
+        'about_mission' => ['default' => null, 'type' => 'string'],
+        'about_vision' => ['default' => null, 'type' => 'string'],
+        'about_values' => ['default' => [], 'type' => 'json'],
+        'about_affiliations' => ['default' => [], 'type' => 'json'],
+        'about_milestones' => ['default' => [], 'type' => 'json'],
+        'about_governance' => ['default' => null, 'type' => 'string'],
+        'privacy_notice' => ['default' => null, 'type' => 'string'],
     ];
 
     public static function get(string $key, mixed $default = null): mixed

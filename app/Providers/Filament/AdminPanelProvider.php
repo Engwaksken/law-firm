@@ -62,8 +62,10 @@ class AdminPanelProvider extends PanelProvider
             ->font(fn (): string => Settings::get('font_body'))
             ->sidebarCollapsibleOnDesktop()
             ->navigationGroups([
+                NavigationGroup::make('Inbox'),
                 NavigationGroup::make('Legal Practice'),
                 NavigationGroup::make('Website'),
+                NavigationGroup::make('Careers'),
                 NavigationGroup::make('Organisation'),
                 NavigationGroup::make('Access Control'),
                 NavigationGroup::make('System'),

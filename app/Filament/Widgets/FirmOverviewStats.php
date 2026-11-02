@@ -4,6 +4,8 @@ namespace App\Filament\Widgets;
 
 use App\Models\ActivityLog;
 use App\Models\Article;
+use App\Models\Career;
+use App\Models\CareerApplication;
 use App\Models\Consultation;
 use App\Models\ContactInquiry;
 use App\Models\User;
@@ -35,6 +37,13 @@ class FirmOverviewStats extends StatsOverviewWidget
         if ($user->can('content.view') || $user->can('content.manage')) {
             $stats[] = Stat::make('Published articles', Article::where('status', 'published')->count())
                 ->description(Article::where('status', 'draft')->count().' drafts')->icon('heroicon-o-newspaper');
+        }
+
+        if ($user->can('careers.manage')) {
+            $stats[] = Stat::make('Open vacancies', Career::query()->open()->count())
+                ->icon('heroicon-o-briefcase');
+            $stats[] = Stat::make('New applications (7 days)', CareerApplication::where('created_at', '>=', now()->subDays(7))->count())
+                ->icon('heroicon-o-document-text')->color('info');
         }
 
         if ($user->can('users.view') || $user->can('users.manage')) {

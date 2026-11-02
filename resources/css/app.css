@@ -4,8 +4,67 @@
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
 @source '../**/*.js';
+@source '../../app/Livewire/**/*.php';
 
+/*
+ * Brand colours and fonts come from Branding settings and are injected as CSS
+ * custom properties in layouts/site.blade.php (--brand-*). The values below
+ * are only fallbacks for when that style block is missing.
+ */
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --color-brand: var(--brand-primary, #14283F);
+    --color-brand-secondary: var(--brand-secondary, #660033);
+    --color-brand-accent: var(--brand-accent, #D4AF37);
+    --color-canvas: var(--brand-background, #FAF9F6);
+    --color-ink: var(--brand-text, #252525);
+
+    --font-sans: var(--brand-font-body, 'Poppins'), ui-sans-serif, system-ui, sans-serif;
+    --font-display: var(--brand-font-heading, 'Outfit'), ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+    html { scroll-behavior: smooth; }
+    [x-cloak] { display: none !important; }
+    body { @apply bg-canvas text-ink font-sans antialiased; }
+    h1, h2, h3, h4 { @apply font-display text-brand tracking-tight; }
+
+    /* Visible, high-contrast keyboard focus everywhere (WCAG 2.4.7 / 2.4.11). */
+    :focus-visible { outline: 3px solid var(--color-brand-accent); outline-offset: 2px; border-radius: 2px; }
+
+    @media (prefers-reduced-motion: reduce) {
+        html { scroll-behavior: auto; }
+        *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+}
+
+@layer components {
+    .container-site { @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8; }
+
+    .btn-primary, .btn-accent, .btn-outline, .btn-ghost-light {
+        @apply inline-flex items-center justify-center gap-2 rounded-md px-5 py-3 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-60;
+    }
+    .btn-primary { @apply bg-brand-secondary text-white hover:bg-brand; }
+    .btn-accent { @apply bg-brand-accent text-brand hover:bg-white; }
+    .btn-outline { @apply border border-brand/30 text-brand hover:border-brand hover:bg-brand hover:text-white; }
+    .btn-ghost-light { @apply border border-white/40 text-white hover:bg-white hover:text-brand; }
+
+    .eyebrow { @apply text-xs font-semibold uppercase tracking-[0.2em] text-brand-secondary; }
+    .section { @apply py-16 sm:py-24; }
+
+    .card { @apply rounded-lg border border-black/5 bg-white shadow-sm transition hover:shadow-md; }
+
+    .prose-site { @apply max-w-none leading-relaxed text-ink/90; }
+    .prose-site h2 { @apply mt-10 mb-4 text-2xl font-semibold; }
+    .prose-site h3 { @apply mt-8 mb-3 text-xl font-semibold; }
+    .prose-site p { @apply mb-5; }
+    .prose-site ul { @apply mb-5 list-disc space-y-2 pl-6; }
+    .prose-site ol { @apply mb-5 list-decimal space-y-2 pl-6; }
+    .prose-site a { @apply font-medium text-brand-secondary underline underline-offset-2 hover:text-brand; }
+    .prose-site blockquote { @apply my-6 border-l-4 border-brand-accent pl-4 italic; }
+
+    .form-label { @apply mb-1.5 block text-sm font-medium text-brand; }
+    .form-input { @apply block w-full rounded-md border border-black/15 bg-white px-3.5 py-2.5 text-sm text-ink shadow-sm placeholder:text-ink/40 focus:border-brand focus:ring-2 focus:ring-brand/20 focus:outline-none; }
+    .form-input[aria-invalid='true'] { @apply border-red-600; }
+    .form-error { @apply mt-1.5 text-sm text-red-700; }
+    .form-hint { @apply mt-1.5 text-xs text-ink/60; }
 }

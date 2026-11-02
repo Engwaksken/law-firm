@@ -24,6 +24,8 @@ class DatabaseSeeder extends Seeder
 
         Office::firstOrCreate(['code' => 'HQ'], ['name' => 'Head Office', 'city' => 'Kampala', 'is_head_office' => true]);
 
+        $this->call(PracticeAreaSeeder::class);
+
         $this->seedSystemOwner();
     }
 

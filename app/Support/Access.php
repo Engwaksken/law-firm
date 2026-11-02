@@ -73,6 +73,7 @@ final class Access
             'inquiries.manage' => 'Handle contact inquiries',
             'consultations.view' => 'View consultation requests',
             'consultations.manage' => 'Manage consultation requests',
+            'careers.manage' => 'Manage vacancies and job applications',
         ],
         'Legal practice' => [
             'clients.view' => 'View clients',
@@ -109,7 +110,7 @@ final class Access
                 'users.view', 'content.view', 'consultations.view', 'consultations.manage', 'inquiries.manage',
                 'clients.view', 'clients.manage', 'matters.view-assigned', 'matters.view-all', 'matters.create',
                 'matters.assign', 'engagements.approve', 'case-notes.edit', 'documents.upload',
-                'documents.approve', 'reports.export',
+                'documents.approve', 'reports.export', 'careers.manage',
             ],
             self::ADVOCATE => [
                 'consultations.view', 'clients.view', 'matters.view-assigned', 'matters.create',
