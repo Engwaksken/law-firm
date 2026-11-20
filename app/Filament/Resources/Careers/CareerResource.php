@@ -49,7 +49,6 @@ class CareerResource extends Resource
     {
         return [
             'index' => ListCareers::route('/'),
-            'create' => CreateCareer::route('/create'),
             'edit' => EditCareer::route('/{record}/edit'),
         ];
     }

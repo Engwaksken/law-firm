@@ -4,6 +4,7 @@ namespace Tests\Feature\Admin\Cms;
 
 use App\Filament\Resources\Menus\Pages\CreateMenu;
 use App\Filament\Resources\Menus\Pages\EditMenu;
+use App\Filament\Resources\Menus\Pages\ListMenus;
 use App\Models\Menu;
 use App\Models\MenuItem;
 use App\Models\Page;
@@ -52,6 +53,24 @@ class MenuBuilderTest extends TestCase
             ->assertSee('Our team')
             ->assertSee('href="https://uls.or.ug" target="_blank" rel="noopener noreferrer"', false)
             ->assertDontSee('Book a consultation</a></li>'."\n".'            <li', false);
+    }
+
+    public function test_menu_create_uses_modal_without_a_create_route(): void
+    {
+        $this->actingAs($this->userWithRole(Access::CONTENT_EDITOR));
+
+        Livewire::test(ListMenus::class)
+            ->callAction('create', data: [
+                'name' => 'Footer navigation',
+                'location' => 'footer',
+                'items' => [['label' => 'Contact', 'link_type' => 'route', 'route_name' => 'contact', 'is_active' => true, 'open_in_new_tab' => false, 'children' => []]],
+            ])
+            ->assertHasNoActionErrors();
+
+        $menu = Menu::sole();
+        $this->assertSame('Footer navigation', $menu->name);
+        $this->assertSame(['Contact'], $menu->items()->pluck('label')->all());
+        $this->get('/admin/menus/create')->assertNotFound();
     }
 
     public function test_edit_hydrates_and_replaces_items(): void

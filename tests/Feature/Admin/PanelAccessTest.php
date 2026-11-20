@@ -101,7 +101,6 @@ class PanelAccessTest extends TestCase
             'content editor cannot see audit log' => [Access::CONTENT_EDITOR, '/admin/activity-logs', 403],
             'content editor cannot change branding' => [Access::CONTENT_EDITOR, '/admin/settings/branding', 403],
             'advocate cannot manage roles' => [Access::ADVOCATE, '/admin/roles', 403],
-            'receptionist cannot create offices' => [Access::RECEPTIONIST, '/admin/offices/create', 403],
             'super admin manages users' => [Access::SUPER_ADMIN, '/admin/users', 200],
             'super admin manages roles' => [Access::SUPER_ADMIN, '/admin/roles', 200],
             'super admin edits branding' => [Access::SUPER_ADMIN, '/admin/settings/branding', 200],
@@ -109,7 +108,6 @@ class PanelAccessTest extends TestCase
             'managing partner cannot manage roles' => [Access::MANAGING_PARTNER, '/admin/roles', 403],
             'auditor reads audit log' => [Access::AUDITOR, '/admin/activity-logs', 200],
             'auditor views users' => [Access::AUDITOR, '/admin/users', 200],
-            'auditor cannot create users' => [Access::AUDITOR, '/admin/users/create', 403],
         ];
     }
 

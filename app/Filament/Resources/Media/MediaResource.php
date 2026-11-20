@@ -66,7 +66,6 @@ class MediaResource extends Resource
     {
         return [
             'index' => ListMedia::route('/'),
-            'create' => CreateMedia::route('/create'),
             'edit' => EditMedia::route('/{record}/edit'),
         ];
     }

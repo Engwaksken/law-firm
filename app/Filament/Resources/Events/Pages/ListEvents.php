@@ -12,6 +12,6 @@ class ListEvents extends ListRecords
 
     protected function getHeaderActions(): array
     {
-        return [CreateAction::make()];
+        return [CreateAction::make()->using(fn (array $data) => \App\Models\Event::create(EventResource::enforcePublishingRules($data)))];
     }
 }

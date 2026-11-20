@@ -43,7 +43,6 @@ class RoleResource extends Resource
     {
         return [
             'index' => ListRoles::route('/'),
-            'create' => CreateRole::route('/create'),
             'edit' => EditRole::route('/{record}/edit'),
         ];
     }

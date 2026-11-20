@@ -3,6 +3,7 @@
 namespace Tests\Feature\Admin\Cms;
 
 use App\Filament\Resources\Events\Pages\CreateEvent;
+use App\Filament\Resources\Events\Pages\ListEvents;
 use App\Filament\Resources\Events\Pages\EditEvent;
 use App\Models\Event;
 use App\Models\Media;
@@ -62,6 +63,19 @@ class EventsAdminTest extends TestCase
         $this->assertSame($image->id, $event->image_id);
     }
 
+    public function test_event_create_action_uses_modal_and_keeps_publish_rules(): void
+    {
+        $this->actingAs($this->writerWithoutPublish());
+
+        Livewire::test(ListEvents::class)
+            ->callAction('create', data: $this->eventData(['status' => 'published']))
+            ->assertHasNoActionErrors();
+
+        $event = Event::sole();
+        $this->assertSame('draft', $event->status);
+        $this->assertNull($event->published_at);
+    }
+
     public function test_non_publisher_can_only_save_drafts(): void
     {
         $this->actingAs($this->writerWithoutPublish());
@@ -104,7 +118,7 @@ class EventsAdminTest extends TestCase
     /** @return array<string, array{string}> */
     public static function cmsUrls(): array
     {
-        return ['media' => ['/admin/media'], 'menus' => ['/admin/menus'], 'events' => ['/admin/events'], 'create event' => ['/admin/events/create']];
+        return ['media' => ['/admin/media'], 'menus' => ['/admin/menus'], 'events' => ['/admin/events']];
     }
 
     #[DataProvider('cmsUrls')]
@@ -134,7 +148,7 @@ class EventsAdminTest extends TestCase
         $this->get("/admin/media/{$media->id}/edit")->assertOk();
         $this->get("/admin/events/{$event->getRouteKey()}/edit")->assertOk();
         $this->get("/admin/menus/{$menu->id}/edit")->assertOk();
-        $this->get('/admin/media/create')->assertOk();
-        $this->get('/admin/menus/create')->assertOk();
+        $this->get('/admin/media/create')->assertNotFound();
+        $this->get('/admin/menus/create')->assertNotFound();
     }
 }

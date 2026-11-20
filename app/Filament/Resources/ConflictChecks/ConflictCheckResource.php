@@ -9,12 +9,18 @@ use App\Filament\Resources\ConflictChecks\Schemas\ConflictCheckForm;
 use App\Filament\Resources\ConflictChecks\Schemas\ConflictCheckInfolist;
 use App\Filament\Resources\ConflictChecks\Tables\ConflictChecksTable;
 use App\Models\ConflictCheck;
+use App\Models\Client;
+use App\Models\Matter;
+use App\Legal\ConflictSearch;
 use BackedEnum;
+use Filament\Actions\Action;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use UnitEnum;
+use Illuminate\Support\Facades\Gate;
 
 /** Conflict checks are immutable once run; only the review decision is added. */
 class ConflictCheckResource extends Resource
@@ -35,6 +41,58 @@ class ConflictCheckResource extends Resource
 
     public static function table(Table $table): Table { return ConflictChecksTable::configure($table); }
 
+    public static function runModalAction(string $name = 'runConflictCheck'): Action
+    {
+        return Action::make($name)
+            ->label('Run conflict check')
+            ->icon(Heroicon::OutlinedShieldExclamation)
+            ->color('warning')
+            ->schema(fn (Schema $schema): Schema => static::form($schema))
+            ->action(function (array $data): void {
+                static::runCheck($data);
+                Notification::make()->title('Conflict check completed')->success()->send();
+            });
+    }
+
+    public static function runCheck(array $data): ConflictCheck
+    {
+        $matter = filled($data['matter_id'] ?? null) ? Matter::find($data['matter_id']) : null;
+        abort_if($matter && ! Gate::allows('view', $matter), 403);
+
+        return app(ConflictSearch::class)->run(
+            $data['parties'] ?? [],
+            auth()->user(),
+            filled($data['client_id'] ?? null) ? Client::find($data['client_id']) : null,
+            $matter,
+        );
+    }
+
+    /** @return array<string, mixed> */
+    public static function initialFormData(?Client $client = null, ?Matter $matter = null): array
+    {
+        if ($matter && ! Gate::allows('view', $matter)) {
+            $matter = null;
+        }
+        $client ??= $matter?->client;
+
+        $parties = [];
+        if ($client) {
+            $parties[] = ['name' => $client->name, 'role' => 'prospective_client'];
+            foreach ($client->contacts as $contact) {
+                $parties[] = ['name' => $contact->name, 'role' => 'related'];
+            }
+        }
+        foreach ($matter?->parties ?? [] as $party) {
+            $parties[] = ['name' => $party->name, 'role' => in_array($party->party_type, ['opposing', 'opposing_counsel'], true) ? 'opposing' : 'related'];
+        }
+
+        return [
+            'client_id' => $client?->id,
+            'matter_id' => $matter?->id,
+            'parties' => $parties ?: [['name' => '', 'role' => 'prospective_client']],
+        ];
+    }
+
     public static function getNavigationBadge(): ?string
     {
         if (! auth()->user()?->can('conflicts.review')) {
@@ -49,7 +107,6 @@ class ConflictCheckResource extends Resource
     {
         return [
             'index' => ListConflictChecks::route('/'),
-            'create' => CreateConflictCheck::route('/create'),
             'view' => ViewConflictCheck::route('/{record}'),
         ];
     }

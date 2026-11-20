@@ -107,6 +107,28 @@ class CalendarAndTasksTest extends PracticeTestCase
             ->assertCanNotSeeTableRecords([$task]);
     }
 
+    public function test_task_create_uses_modal_and_preserves_assignee_notification(): void
+    {
+        Notification::fake();
+        $assistant = $this->userWithRole(Access::LEGAL_ASSISTANT);
+        $this->matter->assignments()->create(['user_id' => $assistant->id, 'role' => 'assistant']);
+
+        $this->actingAs($this->lead);
+        Livewire::test(ListTasks::class)
+            ->callAction('create', data: [
+                'title' => 'File the response',
+                'matter_id' => $this->matter->id,
+                'assigned_to' => $assistant->id,
+                'priority' => 'high',
+                'status' => 'open',
+            ])
+            ->assertHasNoActionErrors();
+
+        $task = Task::sole();
+        $this->assertSame('File the response', $task->title);
+        Notification::assertSentTo($assistant, TaskAssigned::class);
+    }
+
     public function test_assignee_must_be_on_the_matter_team(): void
     {
         $this->actingAs($this->lead);

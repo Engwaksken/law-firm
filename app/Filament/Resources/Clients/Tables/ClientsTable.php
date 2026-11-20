@@ -38,9 +38,9 @@ class ClientsTable
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),
-                Action::make('conflictCheck')->label('Conflict check')->icon(Heroicon::OutlinedShieldExclamation)->color('warning')
+                ConflictCheckResource::runModalAction('conflictCheck')
                     ->visible(fn () => auth()->user()->can('conflicts.run'))
-                    ->url(fn (Client $record) => ConflictCheckResource::getUrl('create', ['client' => $record->id])),
+                    ->fillForm(fn (Client $record) => ConflictCheckResource::initialFormData($record)),
             ]);
     }
 }

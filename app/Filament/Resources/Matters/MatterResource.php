@@ -70,7 +70,6 @@ class MatterResource extends Resource
     {
         return [
             'index' => ListMatters::route('/'),
-            'create' => CreateMatter::route('/create'),
             'view' => ViewMatter::route('/{record}'),
             'edit' => EditMatter::route('/{record}/edit'),
         ];

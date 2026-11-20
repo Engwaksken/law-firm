@@ -24,8 +24,8 @@ class PracticeAdminPagesRenderTest extends PracticeTestCase
         $this->actingAs($this->lead);
 
         foreach ([
-            '/admin/documents', '/admin/documents/create', DocumentResource::getUrl('view', ['record' => $document]),
-            '/admin/tasks', '/admin/tasks/create', TaskResource::getUrl('edit', ['record' => $task]),
+            '/admin/documents', DocumentResource::getUrl('view', ['record' => $document]),
+            '/admin/tasks', TaskResource::getUrl('edit', ['record' => $task]),
             '/admin/hearings', '/admin/deadlines', '/admin/appointments', '/admin/calendar', '/admin',
         ] as $url) {
             $this->get($url)->assertOk();

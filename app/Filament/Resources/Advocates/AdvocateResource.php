@@ -48,7 +48,6 @@ class AdvocateResource extends Resource
     {
         return [
             'index' => ListAdvocates::route('/'),
-            'create' => CreateAdvocate::route('/create'),
             'edit' => EditAdvocate::route('/{record}/edit'),
         ];
     }

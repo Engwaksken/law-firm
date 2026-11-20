@@ -12,6 +12,6 @@ class ListDocuments extends ListRecords
 
     protected function getHeaderActions(): array
     {
-        return [CreateAction::make()->label('Upload document')];
+        return [CreateAction::make()->label('Upload document')->using(fn (array $data) => CreateDocument::storeUpload($data, 'data.file'))];
     }
 }

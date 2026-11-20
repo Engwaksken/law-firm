@@ -12,6 +12,14 @@ class ListMedia extends ListRecords
 
     protected function getHeaderActions(): array
     {
-        return [CreateAction::make()->label('Upload')];
+        return [CreateAction::make()->label('Upload')->using(function (array $data) {
+            return \App\Models\Media::create([
+                ...$data,
+                ...MediaResource::metadataFor($data['path']),
+                'disk' => MediaResource::DISK,
+                'uploaded_by' => auth()->id(),
+                'original_name' => $data['original_name'] ?? basename($data['path']),
+            ]);
+        })];
     }
 }

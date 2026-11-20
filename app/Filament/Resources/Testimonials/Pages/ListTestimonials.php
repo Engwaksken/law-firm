@@ -13,7 +13,7 @@ class ListTestimonials extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()->using(fn (array $data) => \App\Models\Testimonial::create(TestimonialResource::applyApproval($data))),
         ];
     }
 }

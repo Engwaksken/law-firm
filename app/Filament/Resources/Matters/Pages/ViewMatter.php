@@ -44,10 +44,9 @@ class ViewMatter extends ViewRecord
                     $this->refreshFormData(['status']);
                 }),
 
-            Action::make('conflictCheck')
-                ->label('Run conflict check')->icon(Heroicon::OutlinedShieldExclamation)->color('warning')
+            ConflictCheckResource::runModalAction('conflictCheck')
                 ->visible(fn () => auth()->user()->can('conflicts.run') && in_array($this->record->status, ['intake', 'conflict_review'], true))
-                ->url(fn () => ConflictCheckResource::getUrl('create', ['matter' => $this->record->id])),
+                ->fillForm(fn () => ConflictCheckResource::initialFormData(matter: $this->record)),
 
             EditAction::make(),
         ];

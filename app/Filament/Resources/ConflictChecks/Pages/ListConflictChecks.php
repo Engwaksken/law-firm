@@ -13,7 +13,7 @@ class ListConflictChecks extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()->label('Run conflict check')->using(fn (array $data) => ConflictCheckResource::runCheck($data)),
         ];
     }
 }

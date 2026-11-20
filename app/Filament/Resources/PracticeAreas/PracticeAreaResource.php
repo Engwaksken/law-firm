@@ -43,7 +43,6 @@ class PracticeAreaResource extends Resource
     {
         return [
             'index' => ListPracticeAreas::route('/'),
-            'create' => CreatePracticeArea::route('/create'),
             'edit' => EditPracticeArea::route('/{record}/edit'),
         ];
     }

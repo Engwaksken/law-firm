@@ -38,15 +38,15 @@ class AdminPagesRenderTest extends TestCase
 
         $urls = [
             '/admin',
-            '/admin/practice-areas', '/admin/practice-areas/create', "/admin/practice-areas/{$area->slug}/edit",
-            '/admin/advocates', '/admin/advocates/create', "/admin/advocates/{$advocate->slug}/edit",
-            '/admin/articles', '/admin/articles/create', "/admin/articles/{$article->slug}/edit",
-            '/admin/article-categories', '/admin/article-categories/create',
-            '/admin/testimonials', '/admin/testimonials/create',
+            '/admin/practice-areas', "/admin/practice-areas/{$area->slug}/edit",
+            '/admin/advocates', "/admin/advocates/{$advocate->slug}/edit",
+            '/admin/articles', "/admin/articles/{$article->slug}/edit",
+            '/admin/article-categories',
+            '/admin/testimonials',
             '/admin/newsletter-subscribers',
             '/admin/contact-inquiries',
             '/admin/consultations', "/admin/consultations/{$consultation->id}/edit",
-            '/admin/careers', '/admin/careers/create', "/admin/careers/{$career->slug}/edit",
+            '/admin/careers', "/admin/careers/{$career->slug}/edit",
             '/admin/career-applications', "/admin/career-applications/{$application->id}/edit",
             '/admin/settings/website-content',
         ];

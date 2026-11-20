@@ -43,7 +43,6 @@ class OfficeResource extends Resource
     {
         return [
             'index' => ListOffices::route('/'),
-            'create' => CreateOffice::route('/create'),
             'edit' => EditOffice::route('/{record}/edit'),
         ];
     }

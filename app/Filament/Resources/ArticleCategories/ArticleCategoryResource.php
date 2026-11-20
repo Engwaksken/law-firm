@@ -45,7 +45,6 @@ class ArticleCategoryResource extends Resource
     {
         return [
             'index' => ListArticleCategories::route('/'),
-            'create' => CreateArticleCategory::route('/create'),
             'edit' => EditArticleCategory::route('/{record}/edit'),
         ];
     }

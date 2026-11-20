@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Legal;
 
-use App\Filament\Resources\ConflictChecks\Pages\CreateConflictCheck;
+use App\Filament\Resources\Clients\Pages\ListClients;
 use App\Filament\Resources\ConflictChecks\Pages\ViewConflictCheck;
 use App\Legal\ConflictSearch;
 use App\Models\Client;
@@ -133,12 +133,11 @@ class ConflictsTest extends TestCase
         $client->contacts()->create(['name' => 'Rep One']);
 
         $this->actingAs($this->runner);
-        $this->get('/admin/conflict-checks/create?client='.$client->id)->assertOk();
+        $this->get('/admin/conflict-checks/create?client='.$client->id)->assertNotFound();
 
-        Livewire::withQueryParams(['client' => $client->id])->test(CreateConflictCheck::class)
-            ->assertSet('data.client_id', $client->id)
-            ->call('create')
-            ->assertHasNoFormErrors();
+        Livewire::test(ListClients::class)
+            ->callTableAction('conflictCheck', $client)
+            ->assertHasNoTableActionErrors();
 
         $check = ConflictCheck::sole();
         $this->assertEqualsCanonicalizing(['Prefill Client', 'Rep One'], $check->parties->pluck('name')->all());

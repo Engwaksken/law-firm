@@ -70,6 +70,6 @@ class ClientsTest extends TestCase
 
         $this->actingAs($this->userWithRole(Access::CONTENT_EDITOR))->get('/admin/clients')->assertForbidden();
         $this->actingAs($this->userWithRole(Access::FINANCE_OFFICER))->get('/admin/clients')->assertOk();
-        $this->actingAs($this->userWithRole(Access::FINANCE_OFFICER))->get('/admin/clients/create')->assertForbidden();
+        $this->actingAs($this->userWithRole(Access::FINANCE_OFFICER))->get('/admin/clients/create')->assertNotFound();
     }
 }
