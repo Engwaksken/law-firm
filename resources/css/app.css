@@ -17,6 +17,15 @@
     --color-brand-accent: var(--brand-accent, #D4AF37);
     --color-canvas: var(--brand-background, #FAF9F6);
     --color-ink: var(--brand-text, #252525);
+    --color-palette-1: var(--palette-1, #ffffff);
+    --color-palette-2: var(--palette-2, #2d3290);
+    --color-palette-3: var(--palette-3, #019bdb);
+    --color-palette-4: var(--palette-4, #2d328d);
+    --color-palette-5: var(--palette-5, #019ae0);
+    --color-palette-6: var(--palette-6, #5bb3db);
+    --color-palette-7: var(--palette-7, #5c59a1);
+    --color-palette-8: var(--palette-8, #d0f7ff);
+    --color-palette-9: var(--palette-9, #fefff7);
 
     --font-sans: var(--brand-font-body, 'Poppins'), ui-sans-serif, system-ui, sans-serif;
     --font-display: var(--brand-font-heading, 'Outfit'), ui-sans-serif, system-ui, sans-serif;
@@ -41,7 +50,8 @@
     .container-site { @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8; }
 
     .btn-primary, .btn-accent, .btn-outline, .btn-ghost-light {
-        @apply inline-flex items-center justify-center gap-2 rounded-md px-5 py-3 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-60;
+        @apply inline-flex items-center justify-center gap-2 px-5 py-3 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-60;
+        border-radius: var(--brand-radius, 0.625rem);
     }
     .btn-primary { @apply bg-brand-secondary text-white hover:bg-brand; }
     .btn-accent { @apply bg-brand-accent text-brand hover:bg-white; }
@@ -51,7 +61,7 @@
     .eyebrow { @apply text-xs font-semibold uppercase tracking-[0.2em] text-brand-secondary; }
     .section { @apply py-16 sm:py-24; }
 
-    .card { @apply rounded-lg border border-black/5 bg-white shadow-sm transition hover:shadow-md; }
+    .card { @apply border border-black/5 bg-white transition; border-radius: var(--brand-radius, 0.625rem); box-shadow: var(--brand-shadow, 0 1px 3px rgb(0 0 0 / 0.10)); }
 
     .prose-site { @apply max-w-none leading-relaxed text-ink/90; }
     .prose-site h2 { @apply mt-10 mb-4 text-2xl font-semibold; }
@@ -63,7 +73,7 @@
     .prose-site blockquote { @apply my-6 border-l-4 border-brand-accent pl-4 italic; }
 
     .form-label { @apply mb-1.5 block text-sm font-medium text-brand; }
-    .form-input { @apply block w-full rounded-md border border-black/15 bg-white px-3.5 py-2.5 text-sm text-ink shadow-sm placeholder:text-ink/40 focus:border-brand focus:ring-2 focus:ring-brand/20 focus:outline-none; }
+    .form-input { @apply block w-full border border-black/15 bg-white px-3.5 py-2.5 text-sm text-ink shadow-sm placeholder:text-ink/40 focus:border-brand focus:ring-2 focus:ring-brand/20 focus:outline-none; border-radius: var(--brand-radius, 0.625rem); }
     .form-input[aria-invalid='true'] { @apply border-red-600; }
     .form-error { @apply mt-1.5 text-sm text-red-700; }
     .form-hint { @apply mt-1.5 text-xs text-ink/60; }

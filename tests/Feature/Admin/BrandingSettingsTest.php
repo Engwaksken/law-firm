@@ -22,7 +22,9 @@ class BrandingSettingsTest extends TestCase
 
     public function test_defaults_apply_before_anything_is_saved(): void
     {
-        $this->assertSame('#14283F', Settings::get('color_primary'));
+        $this->assertSame('#2d3290', Settings::get('color_primary'));
+        $this->assertSame('#019bdb', Settings::get('palette_color_3'));
+        $this->assertSame('rounded', Settings::get('style_radius'));
         $this->assertSame('UGX', Settings::get('default_currency'));
     }
 
@@ -34,6 +36,10 @@ class BrandingSettingsTest extends TestCase
             ->fillForm([
                 'firm_name' => 'Okello & Partners Advocates',
                 'color_primary' => '#1A2B3C',
+                'palette_color_1' => '#fefefe',
+                'font_heading' => 'Playfair Display',
+                'style_radius' => 'soft',
+                'style_shadow' => 'strong',
                 'contact_email' => 'info@example.test',
                 'social_links' => ['LinkedIn' => 'https://www.linkedin.com/company/example'],
             ])
@@ -42,6 +48,10 @@ class BrandingSettingsTest extends TestCase
 
         $this->assertSame('Okello & Partners Advocates', Settings::get('firm_name'));
         $this->assertSame('#1A2B3C', Settings::get('color_primary'));
+        $this->assertSame('#fefefe', Settings::get('palette_color_1'));
+        $this->assertSame('Playfair Display', Settings::get('font_heading'));
+        $this->assertSame('soft', Settings::get('style_radius'));
+        $this->assertSame('strong', Settings::get('style_shadow'));
         $this->assertSame(['LinkedIn' => 'https://www.linkedin.com/company/example'], Settings::get('social_links'));
 
         // Panel brand name reads the setting.

@@ -19,6 +19,9 @@
     $fontQuery = collect([$fontHeading, $fontBody])->unique()
         ->map(fn ($f) => str($f)->lower()->replace(' ', '-').':400,500,600,700')->implode('|');
     $favicon = Settings::get('favicon_path');
+    $palette = collect(range(1, 9))->mapWithKeys(fn ($i) => [$i => $hex("palette_color_{$i}")]);
+    $radius = ['square' => '0px', 'rounded' => '0.625rem', 'soft' => '1rem'][Settings::get('style_radius')] ?? '0.625rem';
+    $shadow = ['none' => 'none', 'subtle' => '0 1px 3px rgb(0 0 0 / 0.10)', 'strong' => '0 8px 24px rgb(0 0 0 / 0.16)'][Settings::get('style_shadow')] ?? '0 1px 3px rgb(0 0 0 / 0.10)';
 @endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
@@ -52,6 +55,11 @@
             --brand-text: {{ $hex('color_text') }};
             --brand-font-heading: '{{ e($fontHeading) }}';
             --brand-font-body: '{{ e($fontBody) }}';
+            --brand-radius: {{ $radius }};
+            --brand-shadow: {{ $shadow }};
+            @foreach ($palette as $number => $color)
+                --palette-{{ $number }}: {{ $color }};
+            @endforeach
         }
     </style>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -73,7 +81,7 @@
     @stack('jsonld')
     {{ $head ?? '' }}
 </head>
-<body class="flex min-h-screen flex-col">
+<body class="flex min-h-screen flex-col" style="--brand-radius: {{ $radius }}; --brand-shadow: {{ $shadow }}">
     <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-brand focus:shadow">
         Skip to main content
     </a>

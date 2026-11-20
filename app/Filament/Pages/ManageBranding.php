@@ -55,7 +55,7 @@ class ManageBranding extends Page
     public function form(Schema $schema): Schema
     {
         $hex = ['required', 'regex:/^#[0-9A-Fa-f]{6}$/'];
-        $fonts = array_combine($f = ['Poppins', 'Outfit', 'Inter', 'Lato', 'Merriweather', 'Playfair Display', 'Source Sans 3'], $f);
+        $fonts = array_combine($f = ['Poppins', 'Outfit', 'Inter', 'Lato', 'Merriweather', 'Playfair Display', 'Source Sans 3', 'Roboto', 'Open Sans', 'Montserrat', 'Roboto Slab'], $f);
 
         return $schema
             ->statePath('data')
@@ -74,14 +74,23 @@ class ManageBranding extends Page
                             ->image()->disk('public')->directory('branding')->visibility('public')->maxSize(512)
                             ->acceptedFileTypes(['image/png', 'image/x-icon', 'image/vnd.microsoft.icon', 'image/svg+xml']),
                     ]),
-                    Tab::make('Colours & fonts')->icon(Heroicon::OutlinedSwatch)->columns(3)->schema([
-                        ColorPicker::make('color_primary')->label('Primary')->rules($hex),
-                        ColorPicker::make('color_secondary')->label('Secondary')->rules($hex),
-                        ColorPicker::make('color_accent')->label('Accent')->rules($hex),
-                        ColorPicker::make('color_background')->label('Background')->rules($hex),
-                        ColorPicker::make('color_text')->label('Text')->rules($hex),
-                        Select::make('font_heading')->label('Heading font')->options($fonts)->required(),
-                        Select::make('font_body')->label('Body font')->options($fonts)->required(),
+                    Tab::make('Theme & style')->icon(Heroicon::OutlinedSwatch)->schema([
+                        Section::make('Brand palette')->description('Your supplied nine-colour palette. These swatches are available to the site theme.')
+                            ->columns(3)->schema(collect(range(1, 9))->map(fn ($i) => ColorPicker::make("palette_color_{$i}")->label("Palette colour {$i}")->rules($hex))->all()),
+                        Section::make('Theme roles')->description('Choose how the palette is used across the website.')
+                            ->columns(3)->schema([
+                                ColorPicker::make('color_primary')->label('Primary')->rules($hex),
+                                ColorPicker::make('color_secondary')->label('Secondary')->rules($hex),
+                                ColorPicker::make('color_accent')->label('Accent')->rules($hex),
+                                ColorPicker::make('color_background')->label('Background')->rules($hex),
+                                ColorPicker::make('color_text')->label('Text')->rules($hex),
+                            ]),
+                        Section::make('Typography & shape')->columns(2)->schema([
+                            Select::make('font_heading')->label('Heading font')->options($fonts)->required(),
+                            Select::make('font_body')->label('Body font')->options($fonts)->required(),
+                            Select::make('style_radius')->label('Corner style')->options(['square' => 'Square', 'rounded' => 'Rounded', 'soft' => 'Soft'])->required(),
+                            Select::make('style_shadow')->label('Card shadow')->options(['none' => 'None', 'subtle' => 'Subtle', 'strong' => 'Strong'])->required(),
+                        ]),
                     ]),
                     Tab::make('Contact & footer')->icon(Heroicon::OutlinedEnvelope)->columns(2)->schema([
                         TextInput::make('contact_email')->email()->maxLength(255),
