@@ -78,6 +78,35 @@ class CalendarAndTasksTest extends PracticeTestCase
         $this->assertSame(1, Task::count());
     }
 
+    public function test_task_edits_open_in_a_modal_and_keep_matter_authorization(): void
+    {
+        $task = Task::factory()->create([
+            'matter_id' => $this->matter->id,
+            'assigned_to' => $this->lead->id,
+            'created_by' => $this->lead->id,
+        ]);
+
+        $this->actingAs($this->lead);
+
+        Livewire::test(ListTasks::class)
+            ->callTableAction('edit', $task, data: [
+                'title' => 'Updated task title',
+                'matter_id' => $this->matter->id,
+                'assigned_to' => $this->lead->id,
+                'priority' => $task->priority,
+                'status' => $task->status,
+                'due_at' => $task->due_at?->toDateTimeString(),
+                'description' => $task->description,
+            ])
+            ->assertHasNoTableActionErrors();
+
+        $this->assertSame('Updated task title', $task->fresh()->title);
+
+        $this->actingAs($this->outsider);
+        Livewire::test(ListTasks::class)
+            ->assertCanNotSeeTableRecords([$task]);
+    }
+
     public function test_assignee_must_be_on_the_matter_team(): void
     {
         $this->actingAs($this->lead);

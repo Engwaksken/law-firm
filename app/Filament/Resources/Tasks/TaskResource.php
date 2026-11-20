@@ -136,7 +136,23 @@ class TaskResource extends Resource
                         Gate::authorize('update', $record);
                         $record->update(['status' => 'done']);
                     }),
-                EditAction::make()->url(fn (Task $record) => static::getUrl('edit', ['record' => $record])),
+                EditAction::make()->using(function (Task $record, array $data): Task {
+                    Gate::authorize('update', $record);
+
+                    if (($data['matter_id'] ?? null) !== $record->matter_id) {
+                        MatterOptions::authorizeFor(Task::class, $data['matter_id'] ?? null);
+                    }
+
+                    $previousAssignee = $record->assigned_to;
+                    $record->update($data);
+
+                    if ($record->assigned_to !== $previousAssignee) {
+                        $record->forceFill(['escalated_at' => null])->saveQuietly();
+                        Pages\CreateTask::notifyAssignee($record);
+                    }
+
+                    return $record;
+                }),
             ]);
     }
 

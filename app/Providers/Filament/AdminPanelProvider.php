@@ -16,6 +16,7 @@ use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\View\PanelsRenderHook;
 use Filament\Widgets\AccountWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -52,14 +53,15 @@ class AdminPanelProvider extends PanelProvider
             ->brandLogoHeight('2.5rem')
             ->favicon(fn (): ?string => ($path = Settings::get('favicon_path')) ? Storage::disk('public')->url($path) : null)
             ->colors(fn (): array => [
-                'primary' => Color::hex(Settings::get('color_primary')),
+                'primary' => Color::hex(static::brandHex('color_primary', '#2d3290')),
+                'info' => Color::hex(static::brandHex('color_secondary', '#019bdb')),
                 'danger' => Color::Rose,
                 'warning' => Color::Amber,
                 'success' => Color::Emerald,
-                'info' => Color::Sky,
                 'gray' => Color::Slate,
             ])
             ->font(fn (): string => Settings::get('font_body'))
+            ->renderHook(PanelsRenderHook::STYLES_AFTER, fn () => view('filament.brand-theme'))
             ->sidebarCollapsibleOnDesktop()
             ->navigationGroups([
                 NavigationGroup::make('Inbox'),
@@ -95,5 +97,12 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ]);
+    }
+
+    private static function brandHex(string $key, string $fallback): string
+    {
+        $value = (string) Settings::get($key);
+
+        return preg_match('/^#[0-9A-Fa-f]{6}$/', $value) ? $value : $fallback;
     }
 }

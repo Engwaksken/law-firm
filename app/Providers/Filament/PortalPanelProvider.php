@@ -12,6 +12,7 @@ use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\View\PanelsRenderHook;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -44,10 +45,11 @@ class PortalPanelProvider extends PanelProvider
             ->brandLogoHeight('2.5rem')
             ->favicon(fn (): ?string => ($path = Settings::get('favicon_path')) ? Storage::disk('public')->url($path) : null)
             ->colors(fn (): array => [
-                'primary' => Color::hex(preg_match('/^#[0-9A-Fa-f]{6}$/', (string) Settings::get('color_primary')) ? Settings::get('color_primary') : '#14283F'),
+                'primary' => Color::hex(preg_match('/^#[0-9A-Fa-f]{6}$/', (string) Settings::get('color_primary')) ? Settings::get('color_primary') : '#2d3290'),
                 'gray' => Color::Slate,
             ])
             ->font(fn (): string => Settings::get('font_body'))
+            ->renderHook(PanelsRenderHook::STYLES_AFTER, fn () => view('filament.brand-theme'))
             ->topNavigation()
             ->discoverResources(in: app_path('Filament/Portal/Resources'), for: 'App\Filament\Portal\Resources')
             ->discoverPages(in: app_path('Filament/Portal/Pages'), for: 'App\Filament\Portal\Pages')

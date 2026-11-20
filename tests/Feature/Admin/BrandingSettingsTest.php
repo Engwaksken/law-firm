@@ -84,6 +84,22 @@ class BrandingSettingsTest extends TestCase
         $this->assertDatabaseHas('activity_logs', ['event' => 'SiteSetting.created']);
     }
 
+    public function test_notification_emails_use_firm_branding(): void
+    {
+        Settings::setMany([
+            'firm_name' => 'KemmyTech Legal',
+            'color_primary' => '#2d3290',
+        ]);
+
+        $html = (string) (new \Illuminate\Notifications\Messages\MailMessage)
+            ->line('A branded notification')
+            ->action('Open the system', url('/admin'))
+            ->render();
+
+        $this->assertStringContainsString('KemmyTech Legal', $html);
+        $this->assertStringContainsString('background-color: #2d3290', $html);
+    }
+
     public function test_users_without_settings_permission_cannot_save(): void
     {
         $this->actingAs($this->userWithRole(Access::CONTENT_EDITOR));
